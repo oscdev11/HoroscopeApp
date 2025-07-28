@@ -1,6 +1,8 @@
 package com.oscdev.horoscapp.ui.luck
 
 import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.Interpolator
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -16,14 +18,20 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModel
 import com.oscdev.horoscapp.R
 import com.oscdev.horoscapp.databinding.FragmentLuckBinding
+import com.oscdev.horoscapp.ui.core.listener.OnSwipeTouchListener
+import com.oscdev.horoscapp.ui.providers.RandomCardProvider
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Random
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class LuckFragment : Fragment() {
 
     private var _binding: FragmentLuckBinding? = null
     private val binding get() = _binding!!
+
+    @Inject
+    lateinit var randomCardProvider: RandomCardProvider
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -39,11 +47,44 @@ class LuckFragment : Fragment() {
     }
 
     private fun initUi() {
+        preparePrediction()
         initListeners()
     }
 
+    private fun preparePrediction() {
+        val luck = randomCardProvider.getLucky()
+        luck?.let {
+            val currentPrediction = getString(it.text)
+            binding.tvLucky.text = currentPrediction
+            binding.ivLuckyCard.setImageResource(it.image)
+            binding.tvShare.setOnClickListener {
+                shareResult(currentPrediction)
+            }
+        }
+    }
+
+    private fun shareResult(prediction: String) {
+        val sendIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, prediction)
+            type = "text/plain"
+        }
+
+        val shareIntent = Intent.createChooser(sendIntent, null)
+        startActivity(shareIntent)
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
     private fun initListeners() {
-        binding.ivRulette.setOnClickListener { spinRulette() }
+        binding.ivRulette.setOnTouchListener(object : OnSwipeTouchListener(requireContext()) {
+            override fun onSwipeRight() {
+                spinRulette()
+            }
+
+            override fun onSwipeLeft() {
+                spinRulette()
+            }
+        })
     }
 
     private fun spinRulette() {
@@ -92,14 +133,14 @@ class LuckFragment : Fragment() {
         binding.ivReverse.startAnimation(growAnimation)
     }
 
-    private fun showPremonitionView(){
+    private fun showPremonitionView() {
         val desappearAnimation = AlphaAnimation(1.0f, 0.0f)
         desappearAnimation.duration = 200
 
         val appearAnimation = AlphaAnimation(0.0f, 1.0f)
         appearAnimation.duration = 1000
 
-        desappearAnimation.setAnimationListener(object: Animation.AnimationListener{
+        desappearAnimation.setAnimationListener(object : Animation.AnimationListener {
             override fun onAnimationStart(p0: Animation?) {}
 
             override fun onAnimationEnd(p0: Animation?) {
@@ -110,6 +151,9 @@ class LuckFragment : Fragment() {
             override fun onAnimationRepeat(p0: Animation?) {}
 
         })
+
+
+
         binding.preview.startAnimation(desappearAnimation)
         binding.prediction.startAnimation(appearAnimation)
     }
