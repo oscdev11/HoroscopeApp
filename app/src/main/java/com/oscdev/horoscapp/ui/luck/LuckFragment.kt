@@ -3,9 +3,7 @@ package com.oscdev.horoscapp.ui.luck
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.graphics.Interpolator
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +13,7 @@ import android.view.animation.AnimationUtils
 import android.view.animation.DecelerateInterpolator
 import androidx.core.animation.doOnEnd
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModel
+import androidx.fragment.app.Fragment
 import com.oscdev.horoscapp.R
 import com.oscdev.horoscapp.databinding.FragmentLuckBinding
 import com.oscdev.horoscapp.ui.core.listener.OnSwipeTouchListener
