@@ -1,4 +1,4 @@
-package com.oscdev.horoscapp
+package com.oscdev.horoscapp.ui.home
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
@@ -8,8 +8,11 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.oscdev.horoscapp.R
 import com.oscdev.horoscapp.databinding.ActivityMainBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint // puede inyectar cosas
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
