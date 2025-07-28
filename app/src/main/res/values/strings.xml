@@ -64,5 +64,7 @@
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
 
+    <!--Luck-->
+    <string name="share">Share</string>
 
 </resources>
